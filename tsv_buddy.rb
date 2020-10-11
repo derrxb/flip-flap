@@ -7,13 +7,10 @@ module TsvBuddy
   # take_tsv: converts a String with TSV data into @data
   # parameter: tsv - a String in TSV format
   def take_tsv(tsv)
-    source = CSV.parse(tsv, col_sep: "\t")
+    source = CSV.parse(tsv, col_sep: "\t", headers: true)
 
-    source_headings = source[0]
-    source_data = source.slice(1, source.length - 1)
-
-    @data = source_data.map do |current_row|
-      source_headings.each_with_index.reduce({}) do |accumulator, current_heading_with_index|
+    @data = source.map do |current_row|
+      source.headers.each_with_index.reduce({}) do |accumulator, current_heading_with_index|
         heading, index = current_heading_with_index
 
         accumulator.merge({ heading => current_row[index] })
